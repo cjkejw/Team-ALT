@@ -22,8 +22,8 @@ def calculate_angle(a, b, c):
 # Open webcam
 cap = cv2.VideoCapture(0)
 rep_count = 0
-squat_down = False  # Track squat state
-standing = True  # Track if the person is fully standing
+squat_down = False
+standing = True
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -50,10 +50,8 @@ while cap.isOpened():
         ankle = [landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,
                  landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
         
-        # Calculate knee angle
         knee_angle = calculate_angle(hip, knee, ankle)
         
-        # Squat feedback logic
         if knee_angle < 80:  # More strict squat detection
             feedback = "Good squat!"
             color = (0, 255, 0)  # Green
@@ -67,7 +65,6 @@ while cap.isOpened():
         
         cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-        # Improved Rep Counting Logic
         if knee_angle > 160:  # Only count rep when person fully stands
             standing = True  # Mark as fully standing
         
@@ -76,13 +73,11 @@ while cap.isOpened():
             squat_down = False  # Reset squat state
             standing = False  # Reset standing state
         
-        # Display rep count
         cv2.putText(frame, f"Reps: {rep_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
     
-    # Show webcam feed
     cv2.imshow("Squat Tracker AI", frame)
     
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to exit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
