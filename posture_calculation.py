@@ -23,6 +23,7 @@ def calculate_angle(a, b, c):
 cap = cv2.VideoCapture(0)
 rep_count = 0
 squat_down = False  # Track squat state
+standing = True  # Track if the person is fully standing
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -53,21 +54,27 @@ while cap.isOpened():
         knee_angle = calculate_angle(hip, knee, ankle)
         
         # Squat feedback logic
-        if knee_angle < 90:
-            feedback = "Good squat ✅"
+        if knee_angle < 80:  # More strict squat detection
+            feedback = "Good squat!"
             color = (0, 255, 0)  # Green
+            squat_down = True  # Person is in squat position
+        elif knee_angle > 170:
+            feedback = "Why are you standing???"
+            color = (255, 165, 0) #Orange
         else:
-            feedback = "Go deeper! ❌"
+            feedback = "Go further down!"
             color = (0, 0, 255)  # Red
         
         cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-        # Squat repetition counter logic
-        if knee_angle < 90 and not squat_down:
-            squat_down = True  # Squat detected
-        elif knee_angle > 100 and squat_down:
-            squat_down = False  # Stand detected
-            rep_count += 1  # Increase rep count
+        # Improved Rep Counting Logic
+        if knee_angle > 160:  # Only count rep when person fully stands
+            standing = True  # Mark as fully standing
+        
+        if knee_angle < 80 and standing:  # If person squats after fully standing
+            rep_count += 1  # Count rep
+            squat_down = False  # Reset squat state
+            standing = False  # Reset standing state
         
         # Display rep count
         cv2.putText(frame, f"Reps: {rep_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
