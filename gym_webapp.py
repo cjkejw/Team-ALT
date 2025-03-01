@@ -1,32 +1,25 @@
 import streamlit as st
-import cv2
-import mediapipe as mp
-import numpy as np
 import bicepcurls_detection, shoulderpress_detection, squats_detection  # Import exercise scripts
 
-st.title("🏋️‍♂️ FormCheck: Your Personal AI-Powered Gym Posture Assistant")
+# Mapping exercises to functions
+exercises = {
+    "Bicep Curls": bicepcurls_detection.run,
+    "Shoulder Press": shoulderpress_detection.run,
+    "Squats": squats_detection.run,
+}
 
-# Open Webcam
-cap = cv2.VideoCapture(0)
+# Run selected exercise detection
+if "selected_exercise" in st.session_state:
+    exercise = st.session_state["selected_exercise"]
+    st.title(f"🏋️‍♂️ {exercise} Posture Analysis")
 
-# Setup Mediapipe
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose()
-mp_drawing = mp.solutions.drawing_utils
+    if exercise in exercises:
+        exercises[exercise]()  # Call the appropriate function
 
-stframe = st.empty()  # Placeholder for live video
+    if st.button("Back to Main Page"):
+        st.session_state["page"] = "main"
+        st.rerun()
+else:
+    st.warning("Please go back and select an exercise first.")
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
 
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = pose.process(frame)
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-
-    if results.pose_landmarks:
-        mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-
-    # Display video
-    stframe.image(frame, channels="BGR")
