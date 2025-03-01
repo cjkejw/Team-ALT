@@ -4,8 +4,7 @@
 
 ## 🚀 Problem Statement (Hackathon Track 1: Healthcare)  
 
-Healthcare is shifting from **reactive treatment to proactive, AI-driven prevention**.  
-**PostureVision** empowers individuals with **real-time form correction** using **computer vision and AI-driven movement analysis**—helping users prevent injuries, improve their exercise form, and build long-term fitness habits.  
+Gym intimidation and fear of injury deter many, especially beginners, from exercising. Anxiety about judgement & lack of guidance create barriers to fitness, impacting both physical and mental well-being.
 
 ✅ **Remote health monitoring** – AI tracks gym posture without wearables.  
 ✅ **Intelligent alerts** – Detects incorrect form & prevents injury risks.  
