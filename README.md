@@ -1,8 +1,6 @@
-# 🏋️‍♂️ PostureVision – AI-Powered Gym Form Correction  
+# 🏋️‍♂️ ALT – AI-Powered Gym Form Correction  
 
 📌 **Prevent Injuries | Improve Gym Performance | Train Smarter**  
-
-![Banner](https://your-image-url.com) *(Replace with a real banner if available)*  
 
 ## 🚀 Problem Statement (Hackathon Track 1: Healthcare)  
 
