@@ -6,7 +6,6 @@ from shoulderpress_detection import shoulder_press_tracker
 from squats_detection import squat_tracker
 from bicepcurls_detection import bicep_curl_tracker
 from wallseat_detection import wall_sit_tracker
-from sidelateralraise_detection import lateral_raise_tracker
 from deadlift_detection import deadlift_tracker
 
 # Initialize MediaPipe Pose
