@@ -1,26 +1,36 @@
 import streamlit as st
+import subprocess
 
-# Import detection modules
-import bicepcurls_detection
-import shoulderpress_detection
-import squats_detection
+def run_script(script_name):
+    """Runs the selected exercise detection script."""
+    process = subprocess.Popen(["python", script_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return process
+
+st.title("🏋️ Exercise Tracker AI")
+
+st.write("Select an exercise detection script to run:")
 
 # Exercise options
-exercises = {
-    "Bicep Curls": bicepcurls_detection.run,
-    "Shoulder Press": shoulderpress_detection.run,
-    "Squats": squats_detection.run,
+scripts = {
+    "Bicep Curls Detection": "bicepcurls_detection.py",
+    "Shoulder Press Detection": "shoulderpress_detection.py",
+    "Squats Detection": "squats_detection.py"
 }
 
-# Main page UI
-st.title("🏋️‍♂️ FormCheck: AI-Powered Gym Posture Assistant")
+# Create a selection box
+exercise_choice = st.selectbox("Choose an exercise:", list(scripts.keys()), index=None, placeholder="Select an option")
 
-exercise = st.selectbox("Choose an exercise to analyze:", ["Select an exercise"] + list(exercises.keys()))
+# Run the selected script when button is clicked
+if exercise_choice:
+    if st.button(f"Run {exercise_choice}"):
+        st.write(f"Running {exercise_choice}...")
 
-if st.button("Confirm"):
-    if exercise != "Select an exercise":
-        st.session_state["selected_exercise"] = exercise
-        st.session_state["page"] = "exercise"
-        st.rerun()
-    else:
-        st.warning("Please select an exercise before confirming.")
+        # Run the selected script in the background
+        process = run_script(scripts[exercise_choice])
+
+        # Display output logs
+        with st.expander(f"Output of {exercise_choice}"):
+            stdout, stderr = process.communicate()
+            st.text(stdout.decode("utf-8"))
+            if stderr:
+                st.text("Errors:\n" + stderr.decode("utf-8"))
