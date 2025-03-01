@@ -19,7 +19,7 @@ def calculate_angle(a, b, c):
     
     return 360 - angle if angle > 180 else angle
 
-# Open webcam
+# Initialisation
 cap = cv2.VideoCapture(0)
 rep_count = 0
 squat_down = False
@@ -69,9 +69,9 @@ while cap.isOpened():
             standing = True  # Mark as fully standing
         
         if knee_angle < 80 and standing:  # If person squats after fully standing
-            rep_count += 1  # Count rep
-            squat_down = False  # Reset squat state
-            standing = False  # Reset standing state
+            rep_count += 1
+            squat_down = False
+            standing = False
         
         cv2.putText(frame, f"Reps: {rep_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
     
