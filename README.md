@@ -1,4 +1,4 @@
-# 🏋️‍♂️ ALT – AI-Powered Gym Form Correction  
+# 🏋️‍♂️ FormFit – AI-Powered Gym Form Correction  
 
 📌 **Prevent Injuries | Improve Gym Performance | Train Smarter**  
 
