@@ -43,6 +43,7 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
 
 ### 1️⃣ Clone the Repository  
   git clone https://github.com/yourusername/posturevision.git
+  
   cd posturevision
 
 ### 2️⃣ Run the Web App - Ensure your webcam is enabled!
