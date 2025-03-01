@@ -3,6 +3,7 @@ import mediapipe as mp
 import numpy as np
 import math
 import streamlit as st
+import time
 
 # Initialize Mediapipe Pose
 mp_pose = mp.solutions.pose
@@ -24,12 +25,14 @@ def calculate_angle(a, b, c):
 def wall_sit_tracker():
     st.subheader("📹 Wall Sit Tracker - Live Webcam Feed")
     stframe = st.empty()  # Placeholder for video feed
+    sidebar_placeholder = st.sidebar.empty()  # Sidebar placeholder for clearing old content
 
     cap = cv2.VideoCapture(0)
 
     sitting = False
     start_time = 0
     total_time = 0
+    set_durations = []  # Stores duration of each set
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -60,31 +63,44 @@ def wall_sit_tracker():
             feedback = "Keep going!"
             color = (0, 0, 255)  # Default Red
 
-            if 80 <= knee_angle <= 100:  # Ideal wall sit position
+            if 80 <= knee_angle <= 100:  # Proper wall sit position
                 feedback = "Perfect Wall Sit!"
                 color = (0, 255, 0)  # Green
 
-                if not sitting:
+                if not sitting:  # Start a new set
                     sitting = True
-                    start_time = cv2.getTickCount()  # Start timer
+                    start_time = time.time()  # Record start time
 
-            else:
+            else:  # User exits the wall sit position
                 feedback = "Not a proper wall sit!"
                 color = (0, 0, 255)  # Red
 
-                if sitting:
+                if sitting:  # End the set
                     sitting = False
-                    end_time = cv2.getTickCount()
-                    time_spent = (end_time - start_time) / cv2.getTickFrequency()
-                    total_time += time_spent  # Add time spent sitting
+                    end_time = time.time()
+                    duration = end_time - start_time  # Calculate duration
+                    if duration > 2:  # Only count if it's > 2 seconds (to prevent false positives)
+                        set_durations.append(int(duration))  # Store duration as an integer
+                        total_time += duration
+
+                        # ✅ **Fix Sidebar Duplication Issue**
+                        sidebar_placeholder.empty()  # Clear sidebar before updating
+                        with sidebar_placeholder:
+                            st.sidebar.subheader("📝 Wall Sit Set Summary")
+                            for i, dur in enumerate(set_durations, 1):
+                                st.sidebar.write(f"Set {i}: {dur} sec")
 
             cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-            # Display wall sit time
-            elapsed_time = (cv2.getTickCount() - start_time) / cv2.getTickFrequency() if sitting else 0
+            # Display real-time time for current set
+            elapsed_time = time.time() - start_time if sitting else 0
             display_time = total_time + elapsed_time
 
-            cv2.putText(frame, f"Time: {int(display_time)} sec", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            # Display total session time and sets count
+            cv2.putText(frame, f"Session Time: {int(display_time)} sec", (50, 100), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.putText(frame, f"Total Sets: {len(set_durations)}", (50, 150), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Convert frame to RGB before displaying in Streamlit
         frame_rgb_display = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
