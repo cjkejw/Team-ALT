@@ -53,5 +53,4 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
 
 ## 👩‍💻 Team ALT – Contributors  
 
-Shi Ying, Yi Hseun, Emily, Joyce
-
+include later
