@@ -1,38 +1,30 @@
-# Menu
-'''
-1. Squats
-2. Shoulder Press
-3. Bicep Curls
-'''
-
 import os
-import subprocess
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
+def main():
+    print("Welcome to the Exercise Tracker AI!")
 
-print("Welcome to the Exercise Tracker AI!")
+    scripts = {
+        "1": "bicepcurls_detection.py",
+        "2": "shoulderpress_detection.py",
+        "3": "squats_detection.py"
+    }
 
-while True:
-    try:
+    while True:
         print("\nSelect an exercise:")
-        print("1. Squats")
-        print("2. Shoulder Press")
-        print("3. Bicep Curls")
-        print("4. Exit")
+        print("1. Bicep Curls Detection")
+        print("2. Shoulder Press Detection")
+        print("3. Squats Detection")
+        print("q. Quit")
 
-        option = input("Enter option: ").strip()
+        choice = input("Enter the number of your choice: ").strip()
 
-        if option == "1":
-            subprocess.run(["python3", os.path.join(script_dir, "squats_detection.py")])
-        elif option == "2":
-            subprocess.run(["python3", os.path.join(script_dir, "shoulderpress_detection.py")])
-        elif option == "3":
-            subprocess.run(["python3", os.path.join(script_dir, "bicepcurls_detection.py")])
-        elif option == "4":
-            print("Exiting program. Goodbye!")
+        if choice == "q":
+            print("Exiting Exercise Tracker AI. Goodbye!")
             break
+        elif choice in scripts:
+            os.system(f"python {scripts[choice]}")
         else:
-            print("Invalid option. Please enter 1, 2, 3, or 4.")
+            print("Invalid choice. Please select a valid option.")
 
-    except ValueError:
-        print("Invalid input. Please enter a number.")
+if __name__ == "__main__":
+    main()
