@@ -2,6 +2,9 @@ import streamlit as st
 import cv2
 import mediapipe as mp
 import numpy as np
+from shoulderpress_detection import shoulder_press_tracker
+from squats_detection import squat_tracker
+from bicepcurls_detection import bicep_curl_tracker
 
 # Initialize MediaPipe Pose
 mp_pose = mp.solutions.pose
@@ -60,5 +63,10 @@ elif st.session_state["page"] == "exercise":
         st.session_state["page"] = "home"
         st.rerun()  # Refresh app state
 
-    # Run the exercise detection
-    exercise_detection()
+    # Call the corresponding function for the selected exercise
+    if st.session_state["exercise"] == "Bicep Curls Detection":
+        bicep_curl_tracker()
+    elif st.session_state["exercise"] == "Shoulder Press Detection":
+        shoulder_press_tracker()
+    elif st.session_state["exercise"] == "Squats Detection":
+        squat_tracker()

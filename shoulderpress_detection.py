@@ -2,19 +2,12 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import math
+import streamlit as st
 
 # Initialize Mediapipe Pose
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 mp_drawing = mp.solutions.drawing_utils
-
-cap = cv2.VideoCapture(0)
-
-# Shoulder Press counters
-right_press_count = 0
-left_press_count = 0
-right_press_up = False
-left_press_up = False
 
 # Function to calculate the angle between three points
 def calculate_angle(a, b, c):
@@ -24,82 +17,68 @@ def calculate_angle(a, b, c):
 
     radians = math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0])
     angle = abs(radians * 180.0 / np.pi)
-
+    
     return 360 - angle if angle > 180 else angle
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
-    
-    # Convert color to RGB for Mediapipe processing
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = pose.process(frame_rgb)
-    
-    # Convert back to BGR for OpenCV display
-    frame = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
-    
-    if results.pose_landmarks:
-        mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+# Function to track shoulder press
+def shoulder_press_tracker():
+    st.subheader("📹 Shoulder Press Tracker - Live Webcam Feed")
+    stframe = st.empty()  # Placeholder for video feed
+
+    cap = cv2.VideoCapture(0)
+
+    rep_count = 0
+    arms_down = False
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            st.error("Failed to capture webcam. Please check your camera settings.")
+            break
         
-        # Extract landmark positions
-        landmarks = results.pose_landmarks.landmark
+        frame = cv2.flip(frame, 1)  # Flip for natural webcam view
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(frame_rgb)
 
-        # Right arm tracking
-        right_shoulder = [landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,
-                          landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
-        right_elbow = [landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,
-                       landmarks[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
-        right_wrist = [landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].x,
-                       landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-        right_elbow_angle = calculate_angle(right_shoulder, right_elbow, right_wrist)
+            # Extract landmarks for shoulder, elbow, and wrist
+            landmarks = results.pose_landmarks.landmark
 
-        # Start position: Elbow at ~90 degrees
-        if 80 <= right_elbow_angle <= 100:
-            right_press_up = False  # Ready to count the next press
-        
-        # Press position: Arm extended (elbow ~155 degrees)
-        if 150 <= right_elbow_angle <= 165 and not right_press_up:
-            right_press_count += 1
-            right_press_up = True  # Count press only once per rep
+            shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
+                        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,
+                     landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+            wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,
+                     landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
 
-        # Feedback for right arm
-        right_feedback = "Right Press OK!" if right_press_up else "Start from 90 degrees!"
-        right_color = (0, 255, 0) if right_press_up else (0, 165, 255)  # Green for full press, Yellow otherwise
-        cv2.putText(frame, right_feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, right_color, 2)
+            angle = calculate_angle(shoulder, elbow, wrist)
 
-        # Left arm tracking
-        left_shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
-                         landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
-        left_elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,
-                      landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
-        left_wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x,
-                      landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+            # Shoulder press detection logic
+            feedback = "Keep going!"
+            color = (0, 0, 255)  # Default Red
 
-        left_elbow_angle = calculate_angle(left_shoulder, left_elbow, left_wrist)
+            if angle > 160:  # Arms fully extended
+                feedback = "Arms Up!"
+                color = (0, 255, 0)  # Green
+                arms_down = False
+            elif angle < 70:  # Arms fully down
+                feedback = "Lower Arms!"
+                color = (255, 165, 0)  # Orange
+                if not arms_down:
+                    rep_count += 1  # Count rep when arms go fully down
+                    arms_down = True
 
-        # Start position: Elbow at ~90 degrees
-        if 80 <= left_elbow_angle <= 100:
-            left_press_up = False  # Ready to count the next press
+            # Display feedback text
+            cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-        # Press position: Arm extended (elbow ~155 degrees)
-        if 150 <= left_elbow_angle <= 165 and not left_press_up:
-            left_press_count += 1
-            left_press_up = True  # Count press only once per rep
+            # Display rep count
+            cv2.putText(frame, f"Reps: {rep_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-        # Feedback for left arm
-        left_feedback = "Left Press OK!" if left_press_up else "Start from 90 degrees!"
-        left_color = (0, 255, 0) if left_press_up else (0, 165, 255)  # Green for full press, Yellow otherwise
-        cv2.putText(frame, left_feedback, (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, left_color, 2)
+        # Convert frame to RGB before displaying in Streamlit
+        frame_rgb_display = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        stframe.image(frame_rgb_display, channels="RGB", use_container_width=True)
 
-        cv2.putText(frame, f"Right Presses: {right_press_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 215, 0), 2)
-        cv2.putText(frame, f"Left Presses: {left_press_count}", (50, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-    
-    cv2.imshow("Shoulder Press Tracker AI", frame)
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
