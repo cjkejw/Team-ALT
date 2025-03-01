@@ -44,6 +44,53 @@ if "page" not in st.session_state:
     st.session_state["page"] = "home"
 
 if st.session_state["page"] == "home":
+    st.markdown("<h2 style='text-align: center;'>Main Menu</h2>", unsafe_allow_html=True)
+
+    # Custom CSS for centering and enlarging buttons
+    st.markdown(
+        """
+        <style>
+        div.stButton > button {
+            width: 100%;
+            height: 60px;
+            font-size: 18px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Create two columns for side-by-side buttons
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("📷 Example Poses"):
+            st.session_state["page"] = "example_poses"
+            st.rerun()
+
+    with col2:
+        if st.button("🏋️ Select Exercise"):
+            st.session_state["page"] = "select_exercise"
+            st.rerun()
+
+elif st.session_state["page"] == "example_poses":
+    st.subheader("🏋️ Example Poses")
+
+    # Display 5 example images of exercises from the "images" folder
+    st.image([
+        "images/pose5.jpg", 
+        "images/pose2.jpg", 
+        "images/pose3.jpg", 
+        "images/pose4.jpg", 
+        "images/pose1.jpg"
+    ], caption=["Bicep Curl Example", "Shoulder Press Example", "Squats Example", "Wall Sit Example", "Deadlift Example"], use_container_width=True)
+
+    # Back button
+    if st.button("🔙 Back"):
+        st.session_state["page"] = "home"
+        st.rerun()
+
+elif st.session_state["page"] == "select_exercise":
     st.subheader("Select an exercise to track:")
 
     # Exercise options
@@ -55,15 +102,20 @@ if st.session_state["page"] == "home":
         if st.button("✅ Confirm"):
             st.session_state["page"] = "exercise"
             st.session_state["exercise"] = exercise_choice
-            st.rerun()  # Refresh app state
+            st.rerun()
+
+    # Back button
+    if st.button("🔙 Back"):
+        st.session_state["page"] = "home"
+        st.rerun()
 
 elif st.session_state["page"] == "exercise":
     st.subheader(f"🏋️ Now Tracking: {st.session_state['exercise']}")
-    
+
     # Back button (outside the while loop)
     if st.button("🔙 Back"):
         st.session_state["page"] = "home"
-        st.rerun()  # Refresh app state
+        st.rerun()
 
     # Call the corresponding function for the selected exercise
     if st.session_state["exercise"] == "Bicep Curls Detection":
