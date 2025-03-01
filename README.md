@@ -29,28 +29,16 @@ Healthcare is shifting from **reactive treatment to proactive, AI-driven prevent
 
 ## 📌 Features  
 
-🔹 **🎥 AI-Powered Real-Time Posture Tracking** – Uses a webcam to monitor exercise form.  
-🔹 **🤖 Automated Rep Counting** – Ensures users complete full, valid movements.  
-🔹 **📏 Posture Analysis & Feedback** – Real-time detection of incorrect form & provides reminder messages accordingly.  
-🔹 **📊 Multi-Exercise Support** – Tracks common gym exercises:  
+**🎥 AI-Powered Real-Time Posture Tracking** – Uses a webcam to monitor exercise form.  
+**🤖 Automated Rep Counting** – Ensures users complete full, valid movements.  
+**📏 Posture Analysis & Feedback** – Real-time detection of incorrect form & provides reminder messages accordingly.  
+**📊 Multi-Exercise Support** – Tracks common gym exercises:  
 
 ✅ **Squats**  
 ✅ **Deadlifts**  
 ✅ **Shoulder Press**  
 ✅ **Bicep Curls**  
 ✅ **Wall Sits**  
-
----
-
-## 🎥 Demo Video  
-
-🔗 *(Insert link to a demo video if available – YouTube, Loom, or GIFs in the repo)*  
-
----
-
-## 📷 Screenshots
-(Insert 2-3 images showing the app in action – detecting form, counting reps, providing feedback.)
-
 
 ---
 
