@@ -56,22 +56,19 @@ def shoulder_press_tracker():
             angle = calculate_angle(shoulder, elbow, wrist)
 
             # Shoulder press detection logic
-            feedback = "Keep going!"
+            feedback = "Now Down!"
             color = (0, 0, 255)  # Default Red
 
             if angle > 160:  # Arms fully extended (up)
-                feedback = "Arms Are Up!"
+                feedback = "Arms Up!"
                 color = (0, 255, 0)  # Green
                 arms_down = False
             elif angle < 70:  # Arms fully down (lowered)
-                feedback = "Push Up!"
+                feedback = "Go Up!"
                 color = (255, 165, 0)  # Orange
                 if not arms_down:
                     rep_count += 1  # Count rep when arms go fully down
                     arms_down = True
-            elif angle > 90 and angle < 160:  # In neutral position (shoulder press)
-                feedback = "Go Up!"
-                color = (255, 255, 0)  # Yellow (Neutral)
 
             # Display feedback text
             cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
