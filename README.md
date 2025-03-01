@@ -47,7 +47,7 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
   cd posturevision
 
 ### 2️⃣ Run the Web App - Ensure your webcam is enabled!
-  streamlit run gym_webapp.py
+  streamlit run test.py
 
 ---
 
