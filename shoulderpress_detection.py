@@ -28,7 +28,7 @@ def shoulder_press_tracker():
     cap = cv2.VideoCapture(0)
 
     rep_count = 0
-    arms_down = False
+    arms_down = False  # Initially, the arms are up
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -59,16 +59,19 @@ def shoulder_press_tracker():
             feedback = "Keep going!"
             color = (0, 0, 255)  # Default Red
 
-            if angle > 160:  # Arms fully extended
-                feedback = "Arms Up!"
+            if angle > 160:  # Arms fully extended (up)
+                feedback = "Arms Are Up!"
                 color = (0, 255, 0)  # Green
                 arms_down = False
-            elif angle < 70:  # Arms fully down
-                feedback = "Lower Arms!"
+            elif angle < 70:  # Arms fully down (lowered)
+                feedback = "Push Up!"
                 color = (255, 165, 0)  # Orange
                 if not arms_down:
                     rep_count += 1  # Count rep when arms go fully down
                     arms_down = True
+            elif angle > 90 and angle < 160:  # In neutral position (shoulder press)
+                feedback = "Go Up!"
+                color = (255, 255, 0)  # Yellow (Neutral)
 
             # Display feedback text
             cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
