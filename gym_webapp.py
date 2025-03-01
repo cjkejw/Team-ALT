@@ -2,8 +2,9 @@ import streamlit as st
 import cv2
 import mediapipe as mp
 import numpy as np
+import bicepcurls_detection, shoulderpress_detection, squats_detection  # Import exercise scripts
 
-st.title("🏋️‍♂️ FormCheck: AI-Powered Gym Posture Assistant")
+st.title("🏋️‍♂️ FormCheck: Your Personal AI-Powered Gym Posture Assistant")
 
 # Open Webcam
 cap = cv2.VideoCapture(0)
