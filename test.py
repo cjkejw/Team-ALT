@@ -37,7 +37,7 @@ def exercise_detection():
         stframe.image(frame, channels="BGR", use_container_width=True)
 
 # Main Streamlit App
-st.title("🏋️ Exercise Tracker AI")
+st.title("🏋️ FormFit")
 
 # Page navigation
 if "page" not in st.session_state:
