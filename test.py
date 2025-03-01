@@ -6,6 +6,7 @@ from shoulderpress_detection import shoulder_press_tracker
 from squats_detection import squat_tracker
 from bicepcurls_detection import bicep_curl_tracker
 from wallseat_detection import wall_sit_tracker
+from sidelateralraise_detection import lateral_raise_tracker
 
 # Initialize MediaPipe Pose
 mp_pose = mp.solutions.pose
@@ -47,7 +48,7 @@ if st.session_state["page"] == "home":
 
     # Exercise options
     exercise_choice = st.selectbox("Choose an exercise:", 
-                                   ["Bicep Curls Detection", "Shoulder Press Detection", "Squats Detection", "Wall Sit Detection"],
+                                   ["Bicep Curls Detection", "Shoulder Press Detection", "Squats Detection", "Wall Sit Detection", "Side Lateral Raise Detection"],
                                    index=None, placeholder="Select an option")
 
     if exercise_choice:
@@ -73,3 +74,5 @@ elif st.session_state["page"] == "exercise":
         squat_tracker()
     elif st.session_state["exercise"] == "Wall Sit Detection":
         wall_sit_tracker()
+    elif st.session_state["exercise"] == "Side Lateral Raise Detection":
+        lateral_raise_tracker()
