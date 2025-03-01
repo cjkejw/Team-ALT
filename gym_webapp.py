@@ -1,25 +1,30 @@
+# app.py (Streamlit Web App)
+
 import streamlit as st
-import bicepcurls_detection, shoulderpress_detection, squats_detection  # Import exercise scripts
+import cv2
+import bicepcurls_detection, shoulderpress_detection, squats_detection
 
-# Mapping exercises to functions
-exercises = {
-    "Bicep Curls": bicepcurls_detection.run,
-    "Shoulder Press": shoulderpress_detection.run,
-    "Squats": squats_detection.run,
-}
+# Web page setup
+st.title("🏋️‍♂️ FormCheck: AI-Powered Gym Posture Assistant")
 
-# Run selected exercise detection
-if "selected_exercise" in st.session_state:
-    exercise = st.session_state["selected_exercise"]
-    st.title(f"🏋️‍♂️ {exercise} Posture Analysis")
+# Start webcam
+stframe = st.empty()  # Placeholder for live video
 
-    if exercise in exercises:
-        exercises[exercise]()  # Call the appropriate function
+# Open webcam
+cap = cv2.VideoCapture(0)
 
-    if st.button("Back to Main Page"):
-        st.session_state["page"] = "main"
-        st.rerun()
-else:
-    st.warning("Please go back and select an exercise first.")
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
 
+    # Process frame with PoseDetection
+    frame = pose_detector.process_frame(frame)
 
+    # Display processed frame in Streamlit
+    stframe.image(frame, channels="BGR")
+
+# Release pose detection resources
+pose_detector.release()
+
+cap.release()
