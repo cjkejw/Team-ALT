@@ -49,7 +49,7 @@ if st.session_state["page"] == "home":
 
     # Exercise options
     exercise_choice = st.selectbox("Choose an exercise:", 
-                                   ["Bicep Curls Detection", "Shoulder Press Detection", "Squats Detection", "Wall Sit Detection", "Side Lateral Raise Detection", "Deadlift Detection"],
+                                   ["Bicep Curls Detection", "Shoulder Press Detection", "Squats Detection", "Wall Sit Detection", "Deadlift Detection"],
                                    index=None, placeholder="Select an option")
 
     if exercise_choice:
@@ -75,7 +75,5 @@ elif st.session_state["page"] == "exercise":
         squat_tracker()
     elif st.session_state["exercise"] == "Wall Sit Detection":
         wall_sit_tracker()
-    elif st.session_state["exercise"] == "Side Lateral Raise Detection":
-        lateral_raise_tracker()
     elif st.session_state["exercise"] == "Deadlift Detection":
         deadlift_tracker()

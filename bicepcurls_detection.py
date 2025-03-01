@@ -80,6 +80,7 @@ def bicep_curl_tracker():
                 right_curl_count += 1
                 right_arm_extended = False
 
+
             # Left Arm Tracking
             left_shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
                              landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
@@ -111,6 +112,7 @@ def bicep_curl_tracker():
             if left_elbow_angle < 50 and left_arm_extended:
                 left_curl_count += 1
                 left_arm_extended = False
+
 
             # Display rep counts
             cv2.putText(frame, f"Right Curls: {right_curl_count}", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 2)
