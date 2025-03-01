@@ -31,20 +31,14 @@ def exercise_detection():
         # Display video feed in Streamlit
         stframe.image(frame, channels="BGR", use_container_width=True)
 
-        # Generate a unique key for each button by appending the exercise name
-        quit_button_key = "quit_button_" + st.session_state.get("exercise", "default")
-        if st.button("❌ Quit Exercise", key=quit_button_key):
-            cap.release()
-            st.session_state["page"] = "home"
-            st.rerun()  # Use st.rerun() instead of st.experimental_rerun()
-
 # Main Streamlit App
 st.title("🏋️ Exercise Tracker AI")
 
 # Page navigation
-page = st.session_state.get("page", "home")
+if "page" not in st.session_state:
+    st.session_state["page"] = "home"
 
-if page == "home":
+if st.session_state["page"] == "home":
     st.subheader("Select an exercise to track:")
 
     # Exercise options
@@ -56,8 +50,15 @@ if page == "home":
         if st.button("✅ Confirm"):
             st.session_state["page"] = "exercise"
             st.session_state["exercise"] = exercise_choice
-            st.rerun()  # Use st.rerun() instead of st.experimental_rerun()
+            st.rerun()  # Refresh app state
 
-elif page == "exercise":
+elif st.session_state["page"] == "exercise":
     st.subheader(f"🏋️ Now Tracking: {st.session_state['exercise']}")
+    
+    # Back button (outside the while loop)
+    if st.button("🔙 Back"):
+        st.session_state["page"] = "home"
+        st.rerun()  # Refresh app state
+
+    # Run the exercise detection
     exercise_detection()
