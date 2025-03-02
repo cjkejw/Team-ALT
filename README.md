@@ -10,6 +10,8 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
 ✅ **Intelligent alerts** – Detects incorrect form & prevents injury risks.  
 ✅ **Lifestyle management** – Encourages proper movement habits for long-term health.  
 
+[📄 View Pitch Deck](https://github.com/cjkejw/Team-ALT/FormFit.pdf)
+
 ---
 
 ## 🛠️ Tech Stack  
