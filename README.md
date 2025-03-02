@@ -52,5 +52,3 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
 ---
 
 ## 👩‍💻 Team ALT – Contributors  
-
-include later
