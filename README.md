@@ -44,10 +44,8 @@ Gym intimidation and fear of injury deter many, especially beginners, from exerc
 ## 🚀 How to Run Locally  
 
 ### 1️⃣ Clone the Repository  
-  git clone https://github.com/yourusername/posturevision.git
+  git clone https://github.com/cjkejw/Team-ALT.git
   
-  cd posturevision
-
 ### 2️⃣ Run the Web App - Ensure your webcam is enabled!
   streamlit run test.py
 
